@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { APILoader, Map, Marker, NavigationControl, GeolocationControl, InfoWindow } from '@uiw/react-baidu-map';
 
 function App() {
@@ -8,6 +8,23 @@ function App() {
   const handleMapClick = ({ point }) => {
     setCurrentPosition(point);
   };
+
+  useEffect(() => {
+    if (activeSection === 'outdoor') {
+      // 模拟点击地理定位控件以获取当前位置
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCurrentPosition({ lat: latitude, lng: longitude });
+          console.log('自动定位成功', { lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.error('自动定位失败', error);
+          alert('无法获取当前位置，请检查浏览器权限设置。');
+        }
+      );
+    }
+  }, [activeSection]);
 
   return (
     <div className="min-h-screen bg-gray-100">
